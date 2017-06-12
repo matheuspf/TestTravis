@@ -1,5 +1,8 @@
 # ZipIterator
-C++14 simple implementation of a iterator zipper.
+
+[![Build Status](https://travis-ci.org/matheuspf/TestTravis.svg?branch=master)](https://travis-ci.org/matheuspf/TestTravis)
+
+C++14 simple implementation of a iterator zipper
 
 
 This is a single header file that implements iterator zipping. 
