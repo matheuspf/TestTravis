@@ -14,11 +14,6 @@ addons:
       - cmake
       - libtest-dev
 
-before_install:
-  - sudo apt-get install libgtest-dev
-  
-
-
 script:
   - export CXX=/usr/bin/g++-6
   - cd test
