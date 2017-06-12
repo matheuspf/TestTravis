@@ -12,7 +12,11 @@ addons:
       - gcc-6
       - g++-6
       - cmake
-      - libgtest-dev
+
+before_install:
+  - sudo apt-get install libgtest-dev
+  
+
 
 script:
   - export CXX=/usr/bin/g++-6
