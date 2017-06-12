@@ -1,5 +1,5 @@
 # ZipIterator
-C++14 simple implementation of a iterator zipper
+C++14 simple implementation of a iterator zipper.
 
 
 This is a single header file that implements iterator zipping. 
