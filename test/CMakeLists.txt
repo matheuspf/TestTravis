@@ -41,6 +41,6 @@ include_directories(${GTEST_INCLUDE_DIRS} ${PARENT_DIR}/include)
 add_executable(${TEST_NAME} ${SRC_FILES})
 
 #target_link_libraries(${TEST_NAME} gtest gtest_main ${CMAKE_THREAD_LIBS_INIT})
-target_link_libraries(${TEST_NAME} ${GTEST_BOTH_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(${TEST_NAME} /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a ${CMAKE_THREAD_LIBS_INIT})
 
 add_test(test1 ${TEST_NAME})

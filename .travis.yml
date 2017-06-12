@@ -12,6 +12,7 @@ addons:
       - gcc-6
       - g++-6
       - cmake
+      - libtest-dev
 
 before_install:
   - sudo apt-get install libgtest-dev
