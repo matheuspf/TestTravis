@@ -1,31 +1,38 @@
 cmake_minimum_required(VERSION 2.8.8)
-project(gtest_builder C CXX)
-include(ExternalProject)
 
-set(GTEST_FORCE_SHARED_CRT ON)
-set(GTEST_DISABLE_PTHREADS OFF)
+set(TEST_NAME ZipIterTests)
 
-if(MINGW)
-    set(GTEST_DISABLE_PTHREADS ON)
-endif()
+project (${TEST_NAME})
 
-ExternalProject_Add(googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    CMAKE_ARGS -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG:PATH=DebugLibs
-    -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE:PATH=ReleaseLibs
-    -DCMAKE_CXX_FLAGS=${MSVC_COMPILER_DEFS}
-    -Dgtest_force_shared_crt=${GTEST_FORCE_SHARED_CRT}
-    -Dgtest_disable_pthreads=${GTEST_DISABLE_PTHREADS}
-    -DBUILD_GTEST=ON
-    PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
-    # Disable install step
-    INSTALL_COMMAND ""
-    )
+find_package(Threads REQUIRED)
 
-# Specify include dir
-ExternalProject_Get_Property(googletest source_dir)
-set(GTEST_INCLUDE_DIRS ${source_dir}/googletest/include PARENT_SCOPE)
+set(CXXFLAGS "-std=c++14 -O3 -Wall -Wno-deprecated -pthread")
 
-# Specify MainTest's link libraries
-ExternalProject_Get_Property(googletest binary_dir)
-set(GTEST_LIBS_DIR ${binary_dir}/googlemock/gtest PARENT_SCOPE)
+
+
+
+add_subdirectory(gtest)
+
+enable_testing()
+
+
+
+get_filename_component(PARENT_DIR ${PROJECT_SOURCE_DIR} DIRECTORY)
+
+include_directories(${GTEST_INCLUDE_DIRS} ${PARENT_DIR}/include)
+
+
+
+file(GLOB SRC_FILES ${PROJECT_SOURCE_DIR}/*.cpp)
+
+add_executable(${TEST_NAME} ${SRC_FILES})
+
+add_dependencies(${TEST_NAME} googletest)
+
+
+
+target_link_libraries(${TEST_NAME} ${GTEST_LIBS_DIR}/libgtest.a ${GTEST_LIBS_DIR}/libgtest_main.a)
+
+target_link_libraries(${TEST_NAME} ${CMAKE_THREAD_LIBS_INIT})
+
+add_test(test1 ${TEST_NAME})
