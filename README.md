@@ -8,7 +8,7 @@ C++14 simple implementation of a iterator zipper
 This is a single header file that implements iterator zipping. 
 It's main purpose is to be simple and to work in conjunction with stl algorithms.
 No dependences or installation. Just include and use.
-
+a
 Example:
 
 
