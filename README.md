@@ -1,6 +1,6 @@
 # ZipIterator
 
-[![Build Status](https://travis-ci.org/matheuspf/TestTravis.svg?branch=master)](https://travis-ci.org/matheuspf/TestTravis)
+[![Build Status](https://travis-ci.org/matheuspf/TestTravis.svg?branch=master)](https://travis-ci.org/matheuspf/TestTravis) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 C++14 simple implementation of a iterator zipper
 
