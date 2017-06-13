@@ -6,7 +6,6 @@ include(ExternalProject)
 ExternalProject_Add(googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
     PREFIX "${CMAKE_CURRENT_BINARY_DIR}"
-    # Disable install step
     INSTALL_COMMAND ""
     )
 
