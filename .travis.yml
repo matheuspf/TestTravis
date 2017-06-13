@@ -12,7 +12,6 @@ addons:
       - gcc-6
       - g++-6
       - cmake
-      - libtest-dev
 
 script:
   - export CXX=/usr/bin/g++-6
