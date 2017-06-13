@@ -20,7 +20,7 @@ script:
   - cd build
   - cmake ..
   - cmake --build .
-
+  - ./ZipIterTests
 
 notifications:
   email: false
