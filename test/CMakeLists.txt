@@ -7,7 +7,7 @@ project (${TEST_NAME})
 
 find_package(Threads REQUIRED)
 
-set(CXXFLAGS "-std=c++14 -O3 -Wall -Wno-deprecated -pthread")
+set(CXXFLAGS "-std=c++14 -O3 -Wall -Wno-deprecated -pthread --coverage")
 
 add_subdirectory(gtest)
 
