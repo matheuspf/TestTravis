@@ -3,66 +3,70 @@
  *  \brief Some metaprogramming helpers
  */
 
-#ifndef HELPERS_ZIP_ITER_H
-#define HELPERS_ZIP_ITER_H
+#ifndef HANDY_ZIP_ITER_HELPERS_H
+#define HANDY_ZIP_ITER_HELPERS_H
 
-#include <type_traits>
+#include "../Helpers/Helpers.h"
+
 #include <tuple>
 #include <iterator>
 
 
-/// Trick to get the number of arguments passed to a macro
-#define NARGS_(_1, _2, _3, _4, _5, _6, _7, _8, N,...) N
-#define NARGS(...) NARGS_(__VA_ARGS__, 8, 7, 6, 5, 4, 3, 2, 1)
 
 
-/// Makes easier to expand the expressions
-#define EXPAND(...) __VA_ARGS__
-
-/// Concatenate two tokens
-#define CONCAT(x, y) CONCAT_(x, y)
-#define CONCAT_(x, y) EXPAND(x ## y)
-
-
-/** When using stl functions which takes iterator parameters of the 
-  * form (first, last), these macros make it much easier. Simply use
-  * ZIP_ALL(container) for a container class that is iterable (that is,
-  * has std::begin and std::end definitions or is a pointer).
-  * These macros simply call it::help::begin and it::help::end for
-  * each argument, delegating the call to std::begin and std::end
-  * while also supporting pointer types to be called.
+/** @name
+    
+    @brief Utilities for calling handy::zipBegin() and handy::zipEnd() with variadic arguments
+ 
+    When using stl functions which takes iterator parameters of the form (first, last), these macros 
+    make it much easier. 
+    
+    Simply use ZIP_ALL(container) for a container class that is iterable (that is,has both std::begin 
+    and std::end definitions or is a pointer).
+   
+    These macros simply call handy::impl::zip::begin and handy::impl::zip::end for each argument, delegating 
+    the call to std::begin and std::end, while also supporting pointer types to be called.
 */
-#define ZIP_BEGIN1(x, ...) ::it::help::begin(x)
-#define ZIP_BEGIN2(x, ...) ::it::help::begin(x), ZIP_BEGIN1(__VA_ARGS__)
-#define ZIP_BEGIN3(x, ...) ::it::help::begin(x), ZIP_BEGIN2(__VA_ARGS__)
-#define ZIP_BEGIN4(x, ...) ::it::help::begin(x), ZIP_BEGIN3(__VA_ARGS__)
-#define ZIP_BEGIN5(x, ...) ::it::help::begin(x), ZIP_BEGIN4(__VA_ARGS__)
-#define ZIP_BEGIN6(x, ...) ::it::help::begin(x), ZIP_BEGIN5(__VA_ARGS__)
-#define ZIP_BEGIN7(x, ...) ::it::help::begin(x), ZIP_BEGIN6(__VA_ARGS__)
-#define ZIP_BEGIN8(x, ...) ::it::help::begin(x), ZIP_BEGIN7(__VA_ARGS__)
+//@{
+#define ZIP_BEGIN1(x, ...) ::handy::impl::zip::begin(x)
+#define ZIP_BEGIN2(x, ...) ::handy::impl::zip::begin(x), ZIP_BEGIN1(__VA_ARGS__)
+#define ZIP_BEGIN3(x, ...) ::handy::impl::zip::begin(x), ZIP_BEGIN2(__VA_ARGS__)
+#define ZIP_BEGIN4(x, ...) ::handy::impl::zip::begin(x), ZIP_BEGIN3(__VA_ARGS__)
+#define ZIP_BEGIN5(x, ...) ::handy::impl::zip::begin(x), ZIP_BEGIN4(__VA_ARGS__)
+#define ZIP_BEGIN6(x, ...) ::handy::impl::zip::begin(x), ZIP_BEGIN5(__VA_ARGS__)
+#define ZIP_BEGIN7(x, ...) ::handy::impl::zip::begin(x), ZIP_BEGIN6(__VA_ARGS__)
+#define ZIP_BEGIN8(x, ...) ::handy::impl::zip::begin(x), ZIP_BEGIN7(__VA_ARGS__)
 
-#define ZIP_END1(x, ...) ::it::help::end(x)
-#define ZIP_END2(x, ...) ::it::help::end(x), ZIP_END1(__VA_ARGS__)
-#define ZIP_END3(x, ...) ::it::help::end(x), ZIP_END2(__VA_ARGS__)
-#define ZIP_END4(x, ...) ::it::help::end(x), ZIP_END3(__VA_ARGS__)
-#define ZIP_END5(x, ...) ::it::help::end(x), ZIP_END4(__VA_ARGS__)
-#define ZIP_END6(x, ...) ::it::help::end(x), ZIP_END5(__VA_ARGS__)
-#define ZIP_END7(x, ...) ::it::help::end(x), ZIP_END6(__VA_ARGS__)
-#define ZIP_END8(x, ...) ::it::help::end(x), ZIP_END7(__VA_ARGS__)
+#define ZIP_BEGIN(...) APPLY_N(ZIP_BEGIN, __VA_ARGS__)
 
-#define ZIP_ALL(...) EXPAND(::it::zipIter(EXPAND(CONCAT(ZIP_BEGIN, NARGS(__VA_ARGS__)))(__VA_ARGS__)),  \
-                            ::it::zipIter(EXPAND(CONCAT(ZIP_END,   NARGS(__VA_ARGS__)))(__VA_ARGS__)))
 
+#define ZIP_END1(x, ...) ::handy::impl::zip::end(x)
+#define ZIP_END2(x, ...) ::handy::impl::zip::end(x), ZIP_END1(__VA_ARGS__)
+#define ZIP_END3(x, ...) ::handy::impl::zip::end(x), ZIP_END2(__VA_ARGS__)
+#define ZIP_END4(x, ...) ::handy::impl::zip::end(x), ZIP_END3(__VA_ARGS__)
+#define ZIP_END5(x, ...) ::handy::impl::zip::end(x), ZIP_END4(__VA_ARGS__)
+#define ZIP_END6(x, ...) ::handy::impl::zip::end(x), ZIP_END5(__VA_ARGS__)
+#define ZIP_END7(x, ...) ::handy::impl::zip::end(x), ZIP_END6(__VA_ARGS__)
+#define ZIP_END8(x, ...) ::handy::impl::zip::end(x), ZIP_END7(__VA_ARGS__)
+
+#define ZIP_END(...) APPLY_N(ZIP_END, __VA_ARGS__)
+
+
+#define ZIP_ALL(...) EXPAND(::handy::zipIter(EXPAND(CONCAT(ZIP_BEGIN, NUM_ARGS(__VA_ARGS__)))(__VA_ARGS__)),  \
+                            ::handy::zipIter(EXPAND(CONCAT(ZIP_END,   NUM_ARGS(__VA_ARGS__)))(__VA_ARGS__)))
+
+//@}
 
 
 
 
 namespace std
 {
-
-    /** This call converts a rvalue tuple to a lvalue and calls std::swap.
-      * This definition is necessary for some stl functions that use 
-      * std::swap. As long as I could see, there is no performance overhead
+    /** This call converts a rvalue std::tuple to a lvalue and calls std::swap.
+        
+        This definition is necessary for some stl functions that use std::swap. 
+        
+        As long as I could see, there is no performance overhead
     */
     template <typename... Args>
     void swap (std::tuple<Args...>&& a, std::tuple<Args...>&& b) noexcept
@@ -73,53 +77,13 @@ namespace std
 
 
 
-/// Main namespace
-namespace it
+namespace handy
+{
+namespace impl
+{
+namespace zip
 {
 
-// Helper namespace
-namespace help
-{
-
-/**
-  * \brief This function applies a function to every argument of the tuple
-  * \param apply The function to be applied
-  * \param tup A std::tuple
-  * \param std::index_sequence Necessary for expanding the tuple
-  * \param funcArgs Extra arguments of the function
-  */
-template <class Apply, typename... Args, std::size_t... Is, typename... FuncArgs>
-void execTuple (Apply apply, std::tuple<Args...>& tup, std::index_sequence<Is...>, FuncArgs&&... funcArgs)
-{
-    const auto& dummie = { ( apply( std::get<Is>(tup), std::forward<FuncArgs>(funcArgs)... ), int{} ) ... };
-}
-
-template <class Apply, typename... Args, typename... FuncArgs>
-void execTuple (Apply apply, std::tuple<Args...>& tup, FuncArgs&&... funcArgs)
-{
-    return execTuple(apply, tup, std::make_index_sequence<sizeof...(Args)>(), std::forward<FuncArgs>(funcArgs)...);
-}
-
-
-
-
-/** Given an index P, this function reverses the order
-  * of the arguments and apply a function to every element
-  * in the new order. Serves only as syntatic sugar.
-  */
-template <std::size_t P, class Apply, class... Args, std::size_t... Is, std::size_t... Js>
-decltype(auto) reverse (Apply apply, std::tuple<Args...>&& tup, std::index_sequence<Is...>, std::index_sequence<Js...>)
-{
-    return apply(std::get<Js+P>(tup)..., std::get<Is>(tup)...);
-}
-
-template <std::size_t P, class Apply, class... Args>
-decltype(auto) reverse (Apply apply, Args&&... args)
-{
-    return reverse<P>(apply, std::forward_as_tuple(std::forward<Args>(args)...), 
-                          std::make_index_sequence<P>{}, 
-                          std::make_index_sequence<sizeof...(Args)-P>{});
-}
 
 
 /// Simple trait for defining iterable types
@@ -158,9 +122,9 @@ template <class... Iter> using SelectIterTag_t = typename SelectIterTag< Iter...
 
 
 
-// Avoids some boilerplate in the definition of the 'ZipIter' class
+/// Avoids some boilerplate in the definition of the 'ZipIter' class
 template <typename... Iters>
-using IteratorBase = std::iterator < help::SelectIterTag_t< typename std::iterator_traits< Iters >::iterator_category... >, 
+using IteratorBase = std::iterator < impl::zip::SelectIterTag_t< typename std::iterator_traits< Iters >::iterator_category... >, 
                                      std::tuple< typename std::iterator_traits< Iters >::value_type... > >;
 
 
@@ -176,7 +140,7 @@ using EnableIfMinimumTag = std::enable_if_t< iterTagOrder( Tag{} ) >= iterTagOrd
 
 
 
-/// Simple functions to be used in the 'execTuple' function. Defined as lambdas for simplicity.
+/// Simple functions to be used in the handy::applyTuple() function, defined as lambdas for simplicity.
 auto increment = [](auto&& x) { return ++x; };
 
 auto decrement = [](auto&& x) { return --x; };
@@ -253,25 +217,25 @@ decltype(auto) packArgs (T&& t, Args&&... args)
 
 
 
-/// Counts the number of arguments. If an argument is a tuple, sums its total size.
-template <std::size_t V> struct st_constant : std::integral_constant< std::size_t, V > {};
 
+/// Counts the number of arguments. If an argument is a tuple, sums its total size.
 template <typename...> struct CountElements;
 
-template <> struct CountElements <> : st_constant< 0 > { };
+template <> struct CountElements <> : std::integral_constant<std::size_t, 0> { };
 
 template <typename T, typename... Args>
-struct CountElements< T, Args... > : st_constant< 1 + CountElements< Args... >::value > {};
+struct CountElements<T, Args...> : std::integral_constant<std::size_t, CountElements<Args...>::value + 1> {};
 
 template <typename... TupArgs, typename... Args>
-struct CountElements< std::tuple< TupArgs... >, Args... > : st_constant< sizeof...(TupArgs) + 
-                                                                         CountElements< Args... >::value > {};
+struct CountElements<std::tuple<TupArgs...>, Args...> : std::integral_constant<std::size_t, sizeof...(TupArgs) + 
+                                                                               CountElements< Args... >::value> {};
 
 
+} // namespace zip
 
-} // namespace help
+} // namespace impl
 
-} // namespace it
+} // namespace handy
 
 
-#endif // HELPERS_ZIP_ITER_H
+#endif // HANDY_ZIP_ITER_HELPERS_H
