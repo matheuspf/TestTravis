@@ -3,11 +3,10 @@ environment:
   cmake: C:\projects\cmake-3.4.1-win32-x86\bin\cmake.exe
   matrix:
   - generator : Visual Studio 17 Win64
-  - generator : Visual Studio 14 Win64
 
 version: '{build}'
 
-os: Visual Studio 2015
+os: Visual Studio 2017
 
 branches:
   only:
@@ -20,9 +19,6 @@ install:
   - cmd: '%cmake% --version'
 
 before_build:
-  - cmd: dir
-  - cmd: cd C:\projects
-  - cmd: dir
   - cmd: cd C:\projects\TestTravis\tests
   - cmd: mkdir build
   - cmd: cd build
