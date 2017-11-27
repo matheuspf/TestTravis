@@ -7,4 +7,4 @@ branches:
 clone_depth: 5
 
 before_build:
-- g++ --version
+- C:\MinGW\bin\g++ --version
